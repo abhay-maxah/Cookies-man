@@ -1,7 +1,9 @@
-import express from require('express')
+const express = require('express')
 const app = express();
-const {PrismaClient} = require('@prisma/client')
-const prisma = new PrismaClient()
+const User = require('./Routers/user')
+
+app.use(express.json())
+app.use(User)
 
 app.get('/',(req,res)=>{
   res.send('Hello World!')
