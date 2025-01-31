@@ -6,10 +6,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 } 
-model test{
-  id       Int     @id @default(autoincrement())
-  name     String?
-}
 model user {
   id    Int    @id @default(autoincrement())
   name  String
@@ -18,44 +14,41 @@ model user {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
-
-model product{
+model ProductTypes{
   id       Int    @id @default(autoincrement())
   ProductType  ProductType 
-  cookies cookies[]
+  product product[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
-model cookies{
+model product{
   id   Int    @id @default(autoincrement())
   name String 
-  CookiesType String
+  CookiesType String?
   ProductId Int
-  addToCart Boolean
-  product product @relation(fields: [ProductId] ,references: [id])
+  product ProductTypes @relation(fields: [ProductId] ,references: [id])
   Image Images[]
-  cookiesP cookiesPrice[]
+  cookiesP Price[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
-
-model cookiesPrice{
+model Price{
   id       Int    @id @default(autoincrement())
-  cId      Int
+  productId Int?
   Weight String
   Price Int
-  cookies cookies @relation(fields: [cId], references: [id])
+  product product? @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
-
 model Images{
   id Int @id @default(autoincrement())
   fileName String?
   ImageId Int?
   image String
-  cookies cookies? @relation(fields: [ImageId],references: [id])
+  Product product? @relation(fields: [ImageId],references: [id])
 }
+
 // Enum to define product types (1 = Chocolate, 2 = Cookies)
 enum ProductType {
   CHOCOLATE

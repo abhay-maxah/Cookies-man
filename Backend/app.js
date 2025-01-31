@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
 const User = require("./Routers/user");
-const cookies = require("./Routers/cookies");
-
+const commonRouter = require("./Routers/commonRouters");
+const ProductType = require("./Routers/productType");
+const Product = require("./Routers/product");
 app.use(express.json());
 app.use(User);
-app.use(cookies);
+app.use(ProductType);
+app.use(Product);
+app.use(commonRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

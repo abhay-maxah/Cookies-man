@@ -31,8 +31,8 @@ router.post("/image", upload.single("image"), async (req, res) => {
         fileName: req.file.originalname,
       },
     });
-    res.json(image).status(200);
-    // res.json({ success: true, image, req.file });
+    // res.json(image).status(200);
+    res.json({ success: true, image, file: req.file });
   } catch (error) {
     res.send(error);
   }
@@ -78,74 +78,14 @@ router.get("/images", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-//add product
-router.post("/add/product", async (req, res) => {
-  try {
-    const { ProductType } = req.body;
-    const validCatagory = ["CHOCOLATE", "COOKIE", "DESSERTS"];
-    if (!validCatagory.includes(ProductType)) {
-      return res.status(400).json({ error: "Invalid product type" });
-    }
-    const product = await prisma.product.create({
-      data: {
-        ProductType,
-      },
-    });
-    res.json({ message: "Product added successfully", product });
-  } catch (error) {
-    res.json(error);
-  }
-});
-//get product
-router.get("/get/product", async (req, res) => {
-  try {
-    const product = await prisma.product.findMany({
-      // include: { cookies: true },
-    });
-    res.json(product);
-  } catch (error) {
-    res.json(error);
-  }
-});
-//create a cookie
-router.post("/cookie", async (req, res) => {
-  try {
-    const { name, CookiesType, ProductId } = req.body;
-    console.log(name, CookiesType, ProductId);
-
-    const cookie = await prisma.cookies.create({
-      data: {
-        name,
-        CookiesType,
-        ProductId,
-      },
-    });
-    res.json(cookie).status(200);
-  } catch (error) {
-    res.send(error).status(500);
-  }
-});
-//get all cookie INFORMATION
-router.get("/cookie/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const cookie = await prisma.cookies.findFirst({
-      where: { id },
-      include: { cookiesP: true, Image: true },
-    });
-    res.send(cookie);
-  } catch (error) {
-    res.send(error);
-  }
-});
 
 //Add Price for Specific cookies
 router.post("/add/prices", async (req, res) => {
   try {
-    const { cId, Weight, Price } = req.body;
-    const addPrice = await prisma.cookiesPrice.create({
+    const { productId, Weight, Price } = req.body;
+    const addPrice = await prisma.price.create({
       data: {
-        cId,
+        productId,
         Weight,
         Price,
       },
