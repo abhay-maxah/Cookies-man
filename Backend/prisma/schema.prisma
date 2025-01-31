@@ -17,11 +17,11 @@ model user {
   passsword String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
-  }
+}
 
 model product{
   id       Int    @id @default(autoincrement())
-  Chocolates Int
+  ProductType  ProductType 
   cookies cookies[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -29,10 +29,11 @@ model product{
 model cookies{
   id   Int    @id @default(autoincrement())
   name String 
-  Type String
-  description String
+  CookiesType String
+  ProductId Int
+  addToCart Boolean
+  product product @relation(fields: [ProductId] ,references: [id])
   Image Images[]
-  product product @relation(fields: [id] ,references: [id])
   cookiesP cookiesPrice[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -50,7 +51,14 @@ model cookiesPrice{
 
 model Images{
   id Int @id @default(autoincrement())
-  ImageId Int
-  image Bytes
-  cookies cookies @relation(fields: [ImageId],references: [id])
+  fileName String?
+  ImageId Int?
+  image String
+  cookies cookies? @relation(fields: [ImageId],references: [id])
+}
+// Enum to define product types (1 = Chocolate, 2 = Cookies)
+enum ProductType {
+  CHOCOLATE
+  COOKIE
+  DESSERTS
 }
