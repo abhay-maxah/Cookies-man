@@ -1,7 +1,6 @@
 const express = require("express");
 const router = new express.Router();
 const prisma = require("../prisma/client");
-
 //create a Product
 router.post("/product", async (req, res) => {
   try {
@@ -61,5 +60,4 @@ router.get("/product/:id", async (req, res) => {
     res.send(error);
   }
 });
-
 module.exports = router;

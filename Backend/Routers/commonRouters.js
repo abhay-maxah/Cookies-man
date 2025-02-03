@@ -96,4 +96,8 @@ router.post("/add/prices", async (req, res) => {
   }
 });
 
+router.post('/cart',async(req,res)=>{
+  
+})
+
 module.exports = router;

@@ -4,12 +4,13 @@ const User = require("./Routers/user");
 const commonRouter = require("./Routers/commonRouters");
 const ProductType = require("./Routers/productType");
 const Product = require("./Routers/product");
+const cart = require('./Routers/cart')
 app.use(express.json());
 app.use(User);
 app.use(ProductType);
 app.use(Product);
 app.use(commonRouter);
-
+app.use(cart)
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
