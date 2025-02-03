@@ -32,7 +32,7 @@ router.post("/image", upload.single("image"), async (req, res) => {
       },
     });
     // res.json(image).status(200);
-    res.json({ success: true, image, file: req.file });
+    res.json({ success: true, image, file: req.file }).status(200);
   } catch (error) {
     res.send(error);
   }
@@ -65,7 +65,7 @@ router.post("/images/upload", upload.array("images", 5), async (req, res) => {
 // GET route to fetch all images
 router.get("/images", async (req, res) => {
   try {
-    const images = await prisma.images.findMany({ include: { cookies: true } });
+    const images = await prisma.images.findMany({ include: { Product: true } });
     const imagesWithUrls = images.map((img) => ({
       id: img.id,
       filename: img.fileName,
@@ -97,7 +97,7 @@ router.post("/add/prices", async (req, res) => {
 });
 
 router.post('/cart',async(req,res)=>{
-  
+
 })
 
 module.exports = router;
