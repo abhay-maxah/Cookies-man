@@ -20,8 +20,9 @@ router.post("/product", async (req, res) => {
 //list of all Cookies
 router.get("/coockies/products", async (req, res) => {
   try {
+    const { productId } = req.query;
     const cookies = await prisma.product.findMany({
-      where: { ProductId: 1 },
+      where: { ProductId: Number(productId) },
       include: {
         cookiesP: true,
         Image: true,
@@ -34,9 +35,11 @@ router.get("/coockies/products", async (req, res) => {
 });
 //list of all Chocolates
 router.get("/chocolates/products", async (req, res) => {
+  const { productId } = req.query;
+
   try {
     const cookies = await prisma.product.findMany({
-      where: { ProductId: 2 },
+      where: { ProductId: Number(productId)},
       include: {
         cookiesP: true,
         Image: true,
@@ -47,7 +50,7 @@ router.get("/chocolates/products", async (req, res) => {
     res.send(error);
   }
 });
-//get all all information for specific product
+//get all information for specific product
 router.get("/product/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
