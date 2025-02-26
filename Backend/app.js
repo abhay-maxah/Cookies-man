@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
+const cors = require('cors')
 const User = require("./Routers/user");
 const commonRouter = require("./Routers/commonRouters");
 const ProductType = require("./Routers/productType");
 const Product = require("./Routers/product");
 const cart = require('./Routers/cart')
+
 app.use(express.json());
+app.use(cors())
 app.use(User);
 app.use(ProductType);
 app.use(Product);

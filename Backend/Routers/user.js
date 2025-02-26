@@ -7,6 +7,7 @@ const { setauth, auth } = require("../middleware/auth");
 //create a user
 router.post("/user", async (req, res) => {
   try {
+    console.log("call")
     const { name, email, password } = req.body;
     const passsword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
@@ -37,14 +38,15 @@ router.get("/user/profile/:id", auth, async (req, res) => {
 
 //login User
 router.post("/login", async (req, res) => {
+  console.log("login1")
   try {
-    const { email, passsword } = req.body;
+    const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return res.status(400).json({ error: "Email or password is incorrect." });
     }
-    const validPassword = await bcrypt.compare(passsword, user.passsword);
+    const validPassword = await bcrypt.compare(password, user.passsword);
 
     if (!validPassword) {
       return res.status(400).json({ error: "Email or password is incorrect." });

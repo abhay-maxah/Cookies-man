@@ -1,12 +1,16 @@
+import HeroCard from "../components/HeroCard";
 import MainNavigation from "../components/MainNavigation";
+import Subscribe from "../Section/Subscribe";
+import Footer from "./Footer";
 
 function Home(){
   return (
-    <div>
+    <section>
       <MainNavigation />
-      <h1>Home</h1>
-      <p>This is the home page.</p>
-      </div>
+      <HeroCard/>
+      <Subscribe> </Subscribe>
+      <Footer/>
+      </section>
       );
 }
 export default Home;
