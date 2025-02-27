@@ -27,6 +27,12 @@ export function getAuthToken() {
 export function tokenLoader() {     
   return getAuthToken();
 }
+// export async function loader() {
+//   const token = localStorage.getItem("token");
+//   console.log(token)
+//   return token;
+// }
+
 
 export function checkAuth() {
   const token = getAuthToken();

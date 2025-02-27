@@ -3,7 +3,7 @@ const router = new express.Router();
 const prisma = require("../prisma/client");
 const multer = require("multer");
 const app = express();
-const path = require("path"); //in built module no need to download
+const path = require("path"); 
 const fs = require("fs");
 const uploadDir = "./uploads";
 
