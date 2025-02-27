@@ -5,7 +5,7 @@ export default function Product() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
+
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -42,22 +42,24 @@ export default function Product() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-1 gap-6 p-4 bg-[#FDF6EE] min-h-screen">
       {products.map((product) => (
-        <div key={product.id} className="max-w-sm rounded-2xl shadow-lg p-4 bg-white dark:bg-gray-800">
+        <div key={product.id} className="flex items-center bg-[#f9f9f9] dark:bg-gray-800 rounded-2xl shadow-lg p-4 transform transition duration-300 hover:scale-105">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-200">{product.name}</h2>
+            <div className="text-gray-600 dark:text-gray-400">
+              {product.cookiesP.map((cookie) => (
+                <p key={cookie.id} className="text-lg">{cookie.Weight} - ₹{cookie.Price}</p>
+              ))}
+            </div>
+          </div>
           {product.Image.length > 0 && (
             <img 
               src={`http://localhost:3000/${product.Image[0].image}`} 
               alt={product.name} 
-              className="w-full h-40 object-cover rounded-2xl mb-4" 
+              className="w-32 h-32 object-cover rounded-2xl ml-4" 
             />
           )}
-          <h2 className="text-xl font-semibold text-center mb-2">{product.name}</h2>
-          <div className="text-center text-gray-500 dark:text-gray-400">
-            {product.cookiesP.map((cookie) => (
-              <p key={cookie.id}>{cookie.Weight} - ₹{cookie.Price}</p>
-            ))}
-          </div>
         </div>
       ))}
     </div>
