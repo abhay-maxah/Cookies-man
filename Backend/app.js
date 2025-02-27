@@ -6,6 +6,7 @@ const commonRouter = require("./Routers/commonRouters");
 const ProductType = require("./Routers/productType");
 const Product = require("./Routers/Product");
 const cart = require('./Routers/cart')
+app.use('/uploads', express.static('uploads'));
 
 app.use(express.json());
 app.use(cors())

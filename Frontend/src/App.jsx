@@ -6,8 +6,10 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import Cookies from './pages/Cookies'
 import Chocolates from './pages/Chocolates'
-import { tokenLoader } from './util/auth'
+import {tokenLoader } from './util/auth'
 import {action as Authlogout} from './pages/Logout'
+import Cart from './pages/Cart'
+import AddProduct from './components/AddProduct'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -26,14 +28,21 @@ const router = createBrowserRouter([
       },{
         path:'/product',
         children:[
-          {path:'cookies',element:<Cookies/>},
-          {path:'chocolate',element:<Chocolates/>}
+          {path:'cookies',element:<Cookies/>,loader: tokenLoader },
+          {path:'chocolate',element:<Chocolates/>,loader: tokenLoader }
+          
         ]
+      },
+      {
+        path:'cart',element:<Cart/>
+      },
+      {
+        path:'addproduct',element:<AddProduct/>
       },
       {
         path: "logout",
         action: Authlogout,
-      },
+      },{ path: '*', element: <ErrorPage /> } 
     ]
   }
 ])
