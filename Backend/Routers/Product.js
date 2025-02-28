@@ -17,8 +17,8 @@ router.post("/product", async (req, res) => {
     res.send(error).status(500);
   }
 });
-//list of all Cookies
-router.get("/coockies/products", async (req, res) => {
+//list of all product like 1 gor cookies and 2 for chocolates
+router.get("/products", async (req, res) => {
   try {
     const { productId } = req.query;
     const cookies = await prisma.product.findMany({
@@ -33,23 +33,23 @@ router.get("/coockies/products", async (req, res) => {
     res.send(error);
   }
 });
-//list of all Chocolates
-router.get("/chocolates/products", async (req, res) => {
-  const { productId } = req.query;
+// //list of all Chocolates
+// router.get("/chocolates/products", async (req, res) => {
+//   const { productId } = req.query;
 
-  try {
-    const cookies = await prisma.product.findMany({
-      where: { ProductId: Number(productId)},
-      include: {
-        cookiesP: true,
-        Image: true,
-      },
-    });
-    res.send(cookies);
-  } catch (error) {
-    res.send(error);
-  }
-});
+//   try {
+//     const cookies = await prisma.product.findMany({
+//       where: { ProductId: Number(productId)},
+//       include: {
+//         cookiesP: true,
+//         Image: true,
+//       },
+//     });
+//     res.send(cookies);
+//   } catch (error) {
+//     res.send(error);
+//   }
+// });
 //get all information for specific product
 router.get("/product/:id", async (req, res) => {
   try {

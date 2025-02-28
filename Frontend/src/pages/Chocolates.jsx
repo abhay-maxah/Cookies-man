@@ -1,14 +1,14 @@
-import MainNavigation from "../components/MainNavigation";
 import Product from "../components/Product";
 import Footer from "./Footer";
+import { useParams } from "react-router-dom";
 
 const Chocolates = () => {
+  const {productId}= useParams();
   return (
     <>
-      <section className="w-4/5 mx-auto">
-        <MainNavigation />
-        <div className="bg-slate-800 mt-24 text-white">Cookies</div>
-        <Product/>
+      <section className="w-full">
+        <div className="bg-slate-800 text-white">Chocolates</div>
+        <Product  productId={productId}/>
       </section>
       <Footer />
     </>

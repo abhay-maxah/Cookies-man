@@ -2,7 +2,7 @@ import heroVideo from "../assets/HeroCard.mp4";
 
 export default function HeroCard() {
   return (
-    <div className="relative w-4/5 mt-2 mx-auto  min-h-screen md:h-[500px] md:mt-2 lg:h-[600px] lg:mt-2 flex items-center justify-center text-center">
+    <div className="relative w-full mt-1  min-h-screen md:h-[500px] md:mt-2 lg:h-[600px] lg:mt-2 flex items-center justify-center text-center">
       {/* Background Video */}
      
       <video
