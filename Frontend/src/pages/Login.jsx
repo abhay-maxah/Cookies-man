@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NavLink,Form, useNavigate } from "react-router-dom";
-import MainNavigation from "../components/MainNavigation";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -38,7 +37,6 @@ const Login = () => {
 
   return (
     <>
-      <MainNavigation />
       <div className="flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-sm p-6 space-y-6 bg-transparent rounded-2xl shadow-2xl sm:p-8 md:p-10 lg:p-12">
           <h1 className="text-3xl font-extrabold text-center text-[#F64F1A]">Login</h1>

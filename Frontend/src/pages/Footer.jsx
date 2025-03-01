@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-[#F64F1A] text-white p-6 sm:p-8 md:p-16 w-4/5 mx-auto">
+    <footer className="bg-[#F64F1A] text-white p-6 sm:p-8 md:p-16 w-full">
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
         {/* Contact Info */}
         <div className="text-center sm:text-left">
@@ -26,7 +26,7 @@ const Footer = () => {
           <div>
             <p className="font-semibold">Cookies club</p>
             <p className="font-semibold">Chocolate based</p>
-            <p className="font-semibold">Fruit & Spice</p>
+            <p className="font-semibold">Fruit & Spice</p>  
             <p className="font-semibold">Crunchy</p>
           </div>
         </div>

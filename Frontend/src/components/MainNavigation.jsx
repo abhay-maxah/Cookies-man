@@ -23,7 +23,7 @@ export default function Navbar() {
   }, [token]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-[#ebe4e4] text-[#F64F1A] shadow-md sm:p-4 border-b-2 border-[#e4b1af] z-50">
+    <nav className="sticky top-0 left-0 w-full bg-[#ebe4e4] text-[#F64F1A] shadow-md sm:p-4 border-b-2 border-[#e4b1af] z-50 ">
       <div className="container mx-auto flex justify-between items-center px-2 sm:px-6">
         {/* Left Side */}
         <div className="flex items-center space-x-4 sm:space-x-6">
