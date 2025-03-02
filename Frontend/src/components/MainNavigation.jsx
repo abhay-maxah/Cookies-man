@@ -1,22 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X, ShoppingCart, User, Cookie, LogOut } from "lucide-react";
-import { Form, NavLink, useLoaderData } from "react-router-dom";
+import { Form, NavLink } from "react-router-dom";
+import { useAuth } from "../util/AuthContext"; 
 import UserInfo from "./UserInfo";
-export default function Navbar() {
-  const token = useLoaderData("root"); // Get token
+
+export default function MainNavbar() {
+  const { token, logout } = useAuth(); // Get token & logout function
   const [isOpen, setIsOpen] = useState(false);
-  const [authToken, setAuthToken] = useState(token);
-  const [userLogo, setUserLogo] = useState(null); // State for user logo
+  const [userLogo, setUserLogo] = useState(null);
 
-  useEffect(() => {
-    console.log("Token Updated:", token);
-    setAuthToken(token);
-
-    // Simulate fetching user profile image when logged in
+  // Update user image when logged in
+  useState(() => {
     if (token) {
       setUserLogo(
         "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      ); // Replace with your backend image URL
+      );
     } else {
       setUserLogo(null);
     }
@@ -27,28 +25,13 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center px-2 sm:px-6">
         {/* Left Side */}
         <div className="flex items-center space-x-4 sm:space-x-6">
-          <NavLink
-            to="/"
-            className="flex items-center space-x-2 text-sm sm:text-lg font-semibold"
-          >
+          <NavLink to="/" className="flex items-center space-x-2 text-sm sm:text-lg font-semibold">
             <Cookie className="w-6 h-6" />
             <span>Cookies Man</span>
           </NavLink>
-          <NavLink to="/" className="hover:bg-red-300 px-2 py-1 rounded-md">
-            Home
-          </NavLink>
-          <NavLink
-            to="/product/cookies"
-            className="hover:bg-red-300 px-2 py-1 rounded-md"
-          >
-            Cookies
-          </NavLink>
-          <NavLink
-            to="/product/chocolate"
-            className="hover:bg-red-300 px-2 py-1 rounded-md"
-          >
-            Chocolate
-          </NavLink>
+          <NavLink to="/" className="hover:bg-red-300 px-2 py-1 rounded-md">Home</NavLink>
+          <NavLink to="/product/cookies/1" className="hover:bg-red-300 px-2 py-1 rounded-md">Cookies</NavLink>
+          <NavLink to="/product/chocolate/2" className="hover:bg-red-300 px-2 py-1 rounded-md">Chocolate</NavLink>
         </div>
 
         {/* Right Side */}
@@ -58,22 +41,16 @@ export default function Navbar() {
             <span>Cart</span>
           </NavLink>
 
-          {authToken ? (
+          {token ? (
             <>
-              <UserInfo userLogo={userLogo} token={authToken} />
-
-              <Form method="post" action="/logout">
-                <button className="hover:bg-red-300 px-2 py-1 rounded-md flex items-center gap-2">
-                  <LogOut className="w-5 h-5 text-red-500" />
-                  <span>Logout</span>
-                </button>
-              </Form>
+              <UserInfo userLogo={userLogo} token={token} />
+              <button onClick={logout} className="hover:bg-red-300 px-2 py-1 rounded-md flex items-center gap-2">
+                <LogOut className="w-5 h-5 text-red-500" />
+                <span>Logout</span>
+              </button>
             </>
           ) : (
-            <NavLink
-              to="/account/login"
-              className="hover:bg-red-300 px-2 py-1 rounded-md"
-            >
+            <NavLink to="/account/login" className="hover:bg-red-300 px-2 py-1 rounded-md">
               <User className="w-5 h-5" />
               <span>Account</span>
             </NavLink>
@@ -94,25 +71,17 @@ export default function Navbar() {
             <span>Cart</span>
           </NavLink>
 
-          {authToken ? (
+          {token ? (
             <>
-              {userLogo && (
-                <UserInfo userLogo={userLogo} token={authToken} />
-              )}
-
-              <Form method="post" action="/logout">
-                <button className="hover:bg-red-300 mx-auto mt-1 px-2 pt-1 rounded-md flex items-center gap-2">
-                  <LogOut className="w-5 h-5 text-red-500" />
-                  <span>Logout</span>
-                </button>
-              </Form>
+              {userLogo && <UserInfo userLogo={userLogo} token={token} />}
+              <button onClick={logout} className="hover:bg-red-300 mx-auto mt-1 px-2 pt-1 rounded-md flex items-center gap-2">
+                <LogOut className="w-5 h-5 text-red-500" />
+                <span>Logout</span>
+              </button>
             </>
           ) : (
-            <NavLink
-              to="/account/login"
-              className="hover:bg-red-300 mx-auto rounded-md flex items-center justify-center gap-2 "
-            >
-              <User className="w-5 h-5 " />
+            <NavLink to="/account/login" className="hover:bg-red-300 mx-auto rounded-md flex items-center justify-center gap-2">
+              <User className="w-5 h-5" />
               <span>Account</span>
             </NavLink>
           )}

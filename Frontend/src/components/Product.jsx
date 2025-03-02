@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, AlertCircle, Info } from 'lucide-react';
 
-export default function Product()
+export default function Product({productId})
  {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export default function Product()
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await fetch(`http://localhost:3000/products?productId=${1}`);
+        const response = await fetch(`http://localhost:3000/products?productId=${productId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch product data');
         }
@@ -29,7 +29,7 @@ export default function Product()
   }, []);
 
   const handleNavigate = (id) => {
-    navigate(`/product/cookies/detail/${id}`);
+   return navigate(`/product/cookies/detail/${id}`);
   };
   
   if (loading) {

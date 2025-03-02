@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { NavLink,Form, useNavigate } from "react-router-dom";
-
+import { useAuth } from "../util/AuthContext";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -28,8 +29,9 @@ const Login = () => {
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
-      localStorage.setItem("token", data.token);
-      navigate("/"); // Redirect to dashboard after login
+      // localStorage.setItem("token", data.token);
+      login(data.token);
+       navigate("/"); // Redirect to dashboard after login
     } catch (err) {
       setError(err.message);
     }

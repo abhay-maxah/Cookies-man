@@ -1,6 +1,7 @@
 import HeroCard from "../components/HeroCard";
 import Subscribe from "../Section/Subscribe";
 import Footer from "./Footer";
+import MainNavigation from '../components/MainNavigation'
 function Home() {
  
   return (

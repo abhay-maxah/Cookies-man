@@ -17,7 +17,7 @@ router.post("/product", async (req, res) => {
     res.send(error).status(500);
   }
 });
-//list of all product like 1 gor cookies and 2 for chocolates
+//list of all product like 1 for cookies and 2 for chocolates
 router.get("/products", async (req, res) => {
   try {
     const { productId } = req.query;

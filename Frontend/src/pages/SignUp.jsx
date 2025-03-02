@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../util/AuthContext";
 
 function SignUp() {
     const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ function SignUp() {
         email: "",
         password: "",
     });
+    const { login } = useAuth();
 
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -34,7 +36,8 @@ function SignUp() {
             }
 
             // Store token in localStorage
-            localStorage.setItem("token", data.token);
+            // localStorage.setItem("token", data.token);
+            login(data.token);
 
             // Redirect user after signup
             navigate("/");
