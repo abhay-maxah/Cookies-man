@@ -6,15 +6,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 } 
-model user {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
-  cart cart[]
-  passsword String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-}
 model ProductTypes{
   id       Int    @id @default(autoincrement())
   ProductType  ProductType 
@@ -22,15 +13,25 @@ model ProductTypes{
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+model user {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+   cart      Cart?    @relation("UserCart")
+  passsword String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
 model product{
   id   Int    @id @default(autoincrement())
   name String 
   CookiesType String?
   ProductId Int
-  product ProductTypes @relation(fields: [ProductId] ,references: [id])
+  product ProductTypes @relation(fields: [ProductId] ,references: [id],onDelete: Cascade,onUpdate: Cascade)
   Image Images[]
   cookiesP Price[]
-  cart cart[]
+  carts       CartProduct[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
@@ -39,7 +40,7 @@ model Price{
   productId Int?
   Weight String
   Price Int
-  product product? @relation(fields: [productId], references: [id])
+  product product? @relation(fields: [productId], references: [id] ,onDelete: Cascade ,onUpdate: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
@@ -49,18 +50,31 @@ model Images{
   fileName String?
   ImageId Int?
   image String
-  Product product? @relation(fields: [ImageId],references: [id])
+  Product product? @relation(fields: [ImageId],references: [id],onDelete: Cascade , onUpdate: Cascade)
 }
 
-model cart{
-  id       Int    @id @default(autoincrement())
-  userId   Int?
-  productId Int?
-  quantity Int
-  product product? @relation(fields: [productId], references: [id])
-  user user? @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model Cart {
+  id        Int            @id @default(autoincrement())
+  user      user?          @relation("UserCart",fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    Int?            @unique
+  products  CartProduct[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model CartProduct {
+  id             Int      @id @default(autoincrement())
+  cart           Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  cartId         Int
+  product        product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId      Int
+  quantity       Int
+  selectedWeight String?   // Store selected weight like '250g', '500g'
+  selectedPrice  Float?    // Store selected price
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([cartId, productId]) // Prevent duplicate products in one cart
 }
 
 // Enum to define product types (1 = Chocolate, 2 = Cookies)

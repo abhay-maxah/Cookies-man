@@ -4,65 +4,96 @@ const router = new express.Router();
 
 router.post("/addItem", async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { userId, productId, quantity, selectedWeight, selectedPrice } = req.body;
 
-    if (!productId && !quantity) {
-      return res.json({ error: "enter a product id and quntity" }).status(400);
+    if (!userId || !productId || !quantity) {
+      return res.status(400).json({ error: "Please provide userId, productId, and quantity" });
     }
+
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
+
     if (!product) {
-      return res.json({ error: "product not found" }).status(404);
+      return res.status(404).json({ error: "Product not found" });
     }
-    const existingCartItem = await prisma.cart.findFirst({
-      where: { userId, productId },
+
+    let cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: { products: true },
     });
 
-    if (existingCartItem) {
-      // Update quantity if item already exists in cart
-      const updatedCartItem = await prisma.cart.update({
-        where: { id: existingCartItem.id },
-        data: { quantity: existingCartItem.quantity + quantity },
-      });
-
-      return res.json({ message: "Cart updated", cart: updatedCartItem });
-    } else {
-      const newCartItem = await prisma.cart.create({
+    if (!cart) {
+      cart = await prisma.cart.create({
         data: {
-          userId,
-          productId,
-          quantity,
+          user: { connect: { id: userId } },
+        },
+        include: { products: true },
+      });
+    }
+
+    const existingCartProduct = cart.products.find((cp) => cp.productId === productId);
+
+    if (existingCartProduct) {
+      await prisma.cartProduct.update({
+        where: { id: existingCartProduct.id },
+        data: {
+          quantity: existingCartProduct.quantity + quantity,
+          selectedWeight,
+          selectedPrice,
         },
       });
-      return res
-        .status(201)
-        .json({ message: "Item added to cart", cart: newCartItem });
+      return res.json({ message: "Cart updated successfully" });
+    } else {
+      await prisma.cartProduct.create({
+        data: {
+          cart: { connect: { id: cart.id } },
+          product: { connect: { id: productId } },
+          quantity,
+          selectedWeight,
+          selectedPrice,
+        },
+      });
+      return res.status(201).json({ message: "Item added to cart successfully" });
     }
   } catch (error) {
-    res.json({ error }).status(500);
+    console.error("Error adding item to cart:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.get("/getItem", async (req, res) => {
+router.get("/getItem/:userId", async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = parseInt(req.params.userId);
+
     if (!userId) {
-      return res.status(400).json({ error: "User ID is required." });
+      return res.status(400).json({ error: "User ID is required" });
     }
-    const cart = await prisma.cart.findMany({
+
+    const cart = await prisma.cart.findUnique({
       where: { userId },
       include: {
-        product: true,
+        products: {
+          include: {
+            product: {
+              include: {
+                cookiesP: true,
+                Image: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    if (cart.length === 0) {
-      return res.status(404).json({ error: "Cart is empty." });
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
     }
-    res.json(cart).status(200);
+
+    res.json(cart);
   } catch (error) {
-    res.json({ error }).status(500);
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -70,13 +101,11 @@ router.delete("/removeItem/:cartId", async (req, res) => {
   try {
     const { cartId } = req.params;
 
-    // Validate cartId
     if (!cartId) {
       return res.status(400).json({ error: "Cart ID is required." });
     }
 
-    // Check if cart item exists
-    const existingCartItem = await prisma.cart.findUnique({
+    const existingCartItem = await prisma.cartProduct.findUnique({
       where: { id: parseInt(cartId) },
     });
 
@@ -84,8 +113,7 @@ router.delete("/removeItem/:cartId", async (req, res) => {
       return res.status(404).json({ error: "Cart item not found." });
     }
 
-    // Delete cart item
-    await prisma.cart.delete({
+    await prisma.cartProduct.delete({
       where: { id: parseInt(cartId) },
     });
 
@@ -99,16 +127,13 @@ router.delete("/removeItem/:cartId", async (req, res) => {
 router.patch("/update/:cartId", async (req, res) => {
   try {
     const { cartId } = req.params;
-    const { quantity } = req.body;
+    const { quantity, selectedWeight, selectedPrice } = req.body;
 
     if (!cartId || !quantity || quantity < 1) {
-      return res
-        .status(400)
-        .json({ error: "Cart ID and valid quantity are required." });
+      return res.status(400).json({ error: "Cart ID and valid quantity are required." });
     }
 
-    // Check if cart item exists
-    const existingCartItem = await prisma.cart.findUnique({
+    const existingCartItem = await prisma.cartProduct.findUnique({
       where: { id: parseInt(cartId) },
     });
 
@@ -116,9 +141,13 @@ router.patch("/update/:cartId", async (req, res) => {
       return res.status(404).json({ error: "Cart item not found." });
     }
 
-    const updatedCartItem = await prisma.cart.update({
+    const updatedCartItem = await prisma.cartProduct.update({
       where: { id: parseInt(cartId) },
-      data: { quantity: parseInt(quantity) },
+      data: {
+        quantity: parseInt(quantity),
+        selectedWeight,
+        selectedPrice,
+      },
     });
 
     res.json({ message: "Cart item quantity updated.", cart: updatedCartItem });
@@ -127,4 +156,5 @@ router.patch("/update/:cartId", async (req, res) => {
     res.status(500).json({ error: "Server error", details: error.message });
   }
 });
+
 module.exports = router;

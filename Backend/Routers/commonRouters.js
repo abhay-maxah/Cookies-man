@@ -83,6 +83,10 @@ router.get("/images", async (req, res) => {
 router.post("/add/prices", async (req, res) => {
   try {
     const { productId, Weight, Price } = req.body;
+    const validWeights = ["250g", "500g", "1kg"];
+    if (!validWeights.includes(Weight)) {
+      return res.status(400).json({ message: "Weight must be either 250, 500, or 1 (in kg)" });
+    }
     const addPrice = await prisma.price.create({
       data: {
         productId,

@@ -6,10 +6,14 @@ const Chocolates = () => {
   const {productId}= useParams();
   return (
     <>
-      <section className="w-full">
-        <div className="bg-slate-800 text-white">Chocolates</div>
-        <Product  productId={productId}/>
-      </section>
+       <section className="w-full min-h-screen p-6">
+             <div className="text-3xl font-bold text-center text-brown-700 mb-6">
+               🍪 Chocolate 🍪
+             </div>
+             <div>
+               <Product productId={productId} />
+             </div>
+           </section>
       <Footer />
     </>
   );

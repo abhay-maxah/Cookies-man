@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X, ShoppingCart, User, Cookie, LogOut } from "lucide-react";
-import { Form, NavLink } from "react-router-dom";
-import { useAuth } from "../util/AuthContext"; 
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../util/AuthContext";
 import UserInfo from "./UserInfo";
 
 export default function MainNavbar() {
@@ -25,13 +25,28 @@ export default function MainNavbar() {
       <div className="container mx-auto flex justify-between items-center px-2 sm:px-6">
         {/* Left Side */}
         <div className="flex items-center space-x-4 sm:space-x-6">
-          <NavLink to="/" className="flex items-center space-x-2 text-sm sm:text-lg font-semibold">
+          <NavLink
+            to="/"
+            className="flex items-center space-x-2 text-sm sm:text-lg font-semibold"
+          >
             <Cookie className="w-6 h-6" />
             <span>Cookies Man</span>
           </NavLink>
-          <NavLink to="/" className="hover:bg-red-300 px-2 py-1 rounded-md">Home</NavLink>
-          <NavLink to="/product/cookies/1" className="hover:bg-red-300 px-2 py-1 rounded-md">Cookies</NavLink>
-          <NavLink to="/product/chocolate/2" className="hover:bg-red-300 px-2 py-1 rounded-md">Chocolate</NavLink>
+          <NavLink to="/" className="hover:bg-red-300 px-2 py-1 rounded-md">
+            Home
+          </NavLink>
+          <NavLink
+            to="/product/cookies/1"
+            className="hover:bg-red-300 px-2 py-1 rounded-md"
+          >
+            Cookies
+          </NavLink>
+          <NavLink
+            to="/product/chocolate/2"
+            className="hover:bg-red-300 px-2 py-1 rounded-md"
+          >
+            Chocolate
+          </NavLink>
         </div>
 
         {/* Right Side */}
@@ -44,13 +59,19 @@ export default function MainNavbar() {
           {token ? (
             <>
               <UserInfo userLogo={userLogo} token={token} />
-              <button onClick={logout} className="hover:bg-red-300 px-2 py-1 rounded-md flex items-center gap-2">
+              <button
+                onClick={logout}
+                className="hover:bg-red-300 px-2 py-1 rounded-md flex items-center gap-2"
+              >
                 <LogOut className="w-5 h-5 text-red-500" />
                 <span>Logout</span>
               </button>
             </>
           ) : (
-            <NavLink to="/account/login" className="hover:bg-red-300 px-2 py-1 rounded-md">
+            <NavLink
+              to="/account/login"
+              className="hover:bg-red-300 px-2 py-1 rounded-md"
+            >
               <User className="w-5 h-5" />
               <span>Account</span>
             </NavLink>
@@ -73,14 +94,24 @@ export default function MainNavbar() {
 
           {token ? (
             <>
-              {userLogo && <UserInfo userLogo={userLogo} token={token} />}
-              <button onClick={logout} className="hover:bg-red-300 mx-auto mt-1 px-2 pt-1 rounded-md flex items-center gap-2">
+              {userLogo && (
+                <div className="flex justify-center items-center pt-2 pb-2">
+                    <UserInfo userLogo={userLogo} token={token} />
+                </div>
+              )}
+              <button
+                onClick={logout}
+                className="hover:bg-red-300 mx-auto mt-1 px-2 pt-1 rounded-md flex items-center justify-center gap-2"
+              >
                 <LogOut className="w-5 h-5 text-red-500" />
                 <span>Logout</span>
               </button>
             </>
           ) : (
-            <NavLink to="/account/login" className="hover:bg-red-300 mx-auto rounded-md flex items-center justify-center gap-2">
+            <NavLink
+              to="/account/login"
+              className="hover:bg-red-300 mx-auto mt-1 px-2 pt-1 rounded-md flex items-center justify-center gap-2"
+            >
               <User className="w-5 h-5" />
               <span>Account</span>
             </NavLink>

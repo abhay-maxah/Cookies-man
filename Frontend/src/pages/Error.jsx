@@ -1,17 +1,27 @@
 import ErrorPageContain from "../components/ErrorPageContent";
 import { useRouteError } from "react-router-dom";
+
 function ErrorPage() {
   const error = useRouteError();
-  let title = 'An error occurred!';
-  let message = 'Something went wrong!';
+  let title = "An error occurred!";
+  let message = "Something went wrong!";
 
-  if (error.status === 500) {
-    message = error.data.message;
+  if (error && error.status === 500) {
+    message = error.data?.message || message; // For server errors
   }
-  if (error.status === 404) {
-    title = 'Not found!';
-    message = 'Could not find resource or page.';
+  if (error && error.status === 404) {
+    title = "Not Found!";
+    message = "Could not find resource or page.";
   }
+  if (error && error.status === 401) {
+    title = "Unauthorized!";
+    message = "You are not authorized to access this page.";
+  }
+  if (error && error.status === 403) {
+    title = "Forbidden!";
+    message = "You do not have permission to view this page.";
+  }
+
   return (
     <>
       <ErrorPageContain title={title}>
@@ -20,4 +30,5 @@ function ErrorPage() {
     </>
   );
 }
+
 export default ErrorPage;

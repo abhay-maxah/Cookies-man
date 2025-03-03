@@ -6,21 +6,33 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Cookies from "./pages/Cookies";
 import Chocolates from "./pages/Chocolates";
-import { tokenLoader } from "./util/auth";
 import { action as Authlogout } from "./pages/Logout";
 import Cart from "./pages/Cart";
 import AddProduct from "./components/AddProduct";
 import ProductDetail from "./components/ProductDetail";
 import { AuthProvider } from "./util/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// Custom error loader function
+const errorLoader = async ({ request }) => {
+  // Simulate error scenarios based on request URL
+  if (request.url.includes("/forbidden")) {
+    throw new Response("Forbidden", { status: 403 });
+  }
+  if (request.url.includes("/unauthorized")) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  throw new Response("Not Found", { status: 404 });
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />, // Global error page
     id: "root",
-    loader: tokenLoader,
     children: [
-      { index: true, element: <Home />,id:"Home", loader: tokenLoader },
+      { index: true, element: <Home />, id: "Home" },
       {
         path: "account",
         children: [
@@ -34,31 +46,56 @@ const router = createBrowserRouter([
           {
             path: "cookies/:productId",
             element: <Cookies />,
-            loader: tokenLoader
           },
-          { path: "chocolate/:productId", element: <Chocolates />, loader: tokenLoader },
-          { path: "cookies/detail/:productId", element: <ProductDetail /> },
+          {
+            path: "chocolate/:productId",
+            element: <Chocolates />,
+          },
+          {
+            path: "cookies/detail/:productId",
+            element: (
+              <ProtectedRoute>
+                <ProductDetail />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
       {
         path: "cart",
-        element: <Cart />,
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "addproduct",
-        element: <AddProduct />,
+        element: (
+          <ProtectedRoute>
+            <AddProduct />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "logout",
         action: Authlogout,
       },
-      { path: "*", element: <ErrorPage /> },
+      {
+        path: "*",
+        element: <ErrorPage />,
+        loader: errorLoader, // Custom error loader to trigger status codes
+      },
     ],
   },
 ]);
+
 function App() {
-  return (<AuthProvider>
+  return (
+    <AuthProvider>
       <RouterProvider router={router} />
-    </AuthProvider>)
+    </AuthProvider>
+  );
 }
+
 export default App;

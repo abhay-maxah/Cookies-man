@@ -3,15 +3,20 @@ import Product from "../components/Product";
 import Footer from "./Footer";
 
 const Cookies = () => {
-  const {productId}= useParams();
-  console.log(productId)
-  return (                                      
+  const { productId } = useParams();
+  console.log(productId);
+
+  return (
     <>
-      <section className="w-full">
-        <div className=" text-gray-800">Cookies</div>
-        <Product productId={productId}/>
+      <section className="w-full min-h-screen p-6">
+        <div className="text-3xl font-bold text-center text-brown-700 mb-6">
+          🍪 Cookies 🍪
+        </div>
+        <div>
+          <Product productId={productId} />
+        </div>
       </section>
-      <Footer />    
+      <Footer />
     </>
   );
 };
