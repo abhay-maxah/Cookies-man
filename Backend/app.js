@@ -4,7 +4,7 @@ const cors = require('cors')
 const User = require("./Routers/user");
 const commonRouter = require("./Routers/commonRouters");
 const ProductType = require("./Routers/productType");
-const Product = require("./Routers/product");
+const Product = require("./Routers/Product");
 const cart = require('./Routers/cart')
 app.use('/uploads', express.static('uploads'));
 

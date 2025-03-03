@@ -94,7 +94,7 @@ export default function ProductDetail() {
         </div>
       </div>
     </div>
-    <Product/>
+    {/* <Product/> */}
     </>
   );
 }

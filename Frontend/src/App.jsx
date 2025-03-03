@@ -11,6 +11,7 @@ import { action as Authlogout } from "./pages/Logout";
 import Cart from "./pages/Cart";
 import AddProduct from "./components/AddProduct";
 import ProductDetail from "./components/ProductDetail";
+import { AuthProvider } from "./util/AuthContext";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     id: "root",
     loader: tokenLoader,
     children: [
-      { index: true, element: <Home />, loader: tokenLoader },
+      { index: true, element: <Home />,id:"Home", loader: tokenLoader },
       {
         path: "account",
         children: [
@@ -31,11 +32,11 @@ const router = createBrowserRouter([
         path: "/product",
         children: [
           {
-            path: "cookies",
+            path: "cookies/:productId",
             element: <Cookies />,
             loader: tokenLoader
           },
-          { path: "chocolate", element: <Chocolates />, loader: tokenLoader },
+          { path: "chocolate/:productId", element: <Chocolates />, loader: tokenLoader },
           { path: "cookies/detail/:productId", element: <ProductDetail /> },
         ],
       },
@@ -56,6 +57,8 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
-  return <RouterProvider router={router} />;
+  return (<AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>)
 }
 export default App;
