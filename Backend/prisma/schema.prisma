@@ -70,7 +70,7 @@ model CartProduct {
   productId      Int
   quantity       Int
   selectedWeight String?   // Store selected weight like '250g', '500g'
-  selectedPrice  Float?    // Store selected price
+  selectedPrice  Float?    
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

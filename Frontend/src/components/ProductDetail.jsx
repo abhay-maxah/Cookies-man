@@ -28,7 +28,7 @@ export default function ProductDetail() {
           setPrice(response.data.cookiesP[0].Price);
         }
       } catch (err) {
-        setError('Failed to fetch product details');
+        setError('Failed to fetch product details',err);
       } finally {
         setLoading(false);
       }
@@ -45,35 +45,36 @@ export default function ProductDetail() {
     const userId = getUserId();
     if (!userId) {
       alert('Please log in first');
-      return ;
+      return;
     }
-    console.log(userId)
-
-    if (!selectedWeight) {
+  
+    if (!selectedWeight || !price) {
       alert('Please select a weight before adding to cart');
       return;
     }
-    console.log({
-      productId,
-      userId,
-      quantity: 1,})
+  
     try {
       const response = await axios.post('http://localhost:3000/addItem', {
-        productId : parseInt(productId),
+        productId: parseInt(productId),
         userId,
-        quantity: 1,
+        quantity: 1,  // Default quantity
+        selectedWeight,
+        selectedPrice: price,
       });
-      console.log(response.data,response.status)
-
+  
       if (response.status === 201) {
         alert('Item added to cart successfully!');
       }
+      if(response.status===200){
+        alert('Item added to cart successfully !');
+      }
+
     } catch (err) {
       console.error('Failed to add item to cart:', err);
       alert('Failed to add item to cart.');
     }
   };
-
+  
   if (loading) return <div className="text-center text-lg mt-20">Loading...</div>;
   if (error) return <div className="text-center text-red-500 mt-20">{error}</div>;
 

@@ -16,7 +16,7 @@ router.post("/addItem", async (req, res) => {
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
-    }
+    } 
 
     let cart = await prisma.cart.findUnique({
       where: { userId },

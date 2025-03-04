@@ -69,7 +69,7 @@ export default function Product({ productId }) {
 
             {product.cookiesP.length > 0 && (
               <div className="flex justify-between items-center mb-4">
-                <span className="text-lg text-gray-700 font-medium">MRP:</span>
+                <span className="text-lg text-gray-700 font-medium">MRP: Rs</span>
                 <span className="bg-[#FFE082] text-[#6D4C41] px-4 py-1 rounded-full font-semibold">
                   ₹{product.cookiesP[0].Price}
                 </span>
