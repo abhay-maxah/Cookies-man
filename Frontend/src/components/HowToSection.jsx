@@ -7,7 +7,7 @@ const HowToSection = () => {
         <div className="text-center ml-[150px] md:text-left">
           <h3 className="uppercase font-bold text-sm tracking-wider mb-4">How-To</h3>
           <p className="text-lg leading-relaxed">
-            Every batch is crafted with the finest ingredients, mixed to perfection, and baked with love to create a treat that's not just delicious, but memorable.
+          Every batch is crafted with the finest ingredients, mixed to perfection, and baked with love to create a treat that's not just delicious, but memorable. Our cookies are made using time-honored recipes, ensuring each bite delivers a perfect balance of flavor and texture. From the careful selection of premium ingredients to the delicate baking process, we pay attention to every detail to guarantee freshness and quality. Whether it's a classic favorite or a new flavor, each cookie is a little piece of happiness—crafted to satisfy your cravings and create moments worth savoring.
           </p>
         </div>
         <div className="flex justify-center">

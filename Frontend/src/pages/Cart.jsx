@@ -84,7 +84,7 @@ const Cart = () => {
           Your cart is empty
         </div>
       ) : (
-        <div>
+        <div  className="w-3/5 mx-auto">
           {cartItems.map((item) => (
             <div key={item.id} className="border p-4 my-2 flex items-center justify-between">
               <div>
@@ -121,7 +121,6 @@ const Cart = () => {
           </div>
         </div>
       )}
-      <Footer />
     </div>
   );
 };

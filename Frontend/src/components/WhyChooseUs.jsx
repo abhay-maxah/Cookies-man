@@ -25,7 +25,7 @@ const features = [
   },
   {
     title: "Award Winning",
-    description: "Recognized for excellence in coffee craftsmanship",
+    description: "Recognized for excellence in Cookies craftsmanship",
     icon: <LucideAward size={40} className="text-[#F64F14]"/>, 
 
     text: "text-[#F64F14]",
