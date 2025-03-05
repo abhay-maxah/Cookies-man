@@ -7,11 +7,13 @@ const AddProduct = () => {
   const [variants, setVariants] = useState([{ weight: "", price: "" }]);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+
+  const validWeights = ["250g", "500g", "1kg"];
 
   const handleVariantChange = (index, field, value) => {
-    const newVariants = [...variants];
-    newVariants[index][field] = value;
+    const newVariants = variants.map((v, i) =>
+      i === index ? { ...v, [field]: value } : v
+    );
     setVariants(newVariants);
   };
 
@@ -21,94 +23,50 @@ const AddProduct = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files.length + images.length <= 5) {
-      setImages([...images, ...Array.from(e.target.files)]);
-    } else {
-      alert("You can upload up to 5 images only");
-    }
+  const resetForm = () => {
+    setName("");
+    setCategory("chocolate");
+    setCookiesType("chocolate cookies");
+    setVariants([{ weight: "", price: "" }]);
+    setImages([]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    for (let variant of variants) {
+      if (!validWeights.includes(variant.weight)) {
+        alert(
+          `Invalid weight: ${variant.weight}. Allowed weights are 250g, 500g, 1kg.`
+        );
+        return;
+      }
+    }
     setLoading(true);
-    setSuccessMessage(""); // Reset success message
-      // Log the user-entered data
-  console.log("Product Name:", name);
-  console.log("Category:", category);
-  console.log("Category:", cookiesType);
-  console.log("Variants:", variants);
-  console.log("Images:", images);
 
     try {
-      // 1. Create Product
-      const productResponse = await fetch("http://localhost:3000/product", {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("CookiesType", category === "cookies" ? cookiesType : "");
+      formData.append("ProductId", category === "cookies" ? 1 : 2);
+
+      images.forEach((image) => formData.append("images", image));
+      variants.forEach((variant, index) => {
+        formData.append(`prices[${index}][Weight]`, variant.weight);
+        formData.append(`prices[${index}][Price]`, variant.price);
+      });
+
+      const response = await fetch("http://localhost:3000/product/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          CookiesType: category === "cookies" ? cookiesType : null,
-          ProductId: category === "cookies" ? 1 : 2, // 1 = Cookies, 2 = Chocolate
-        }),
+        body: formData,
       });
 
-      if (!productResponse.ok) {
-        throw new Error("Failed to create product");
-      }
+      if (!response.ok) throw new Error("Failed to create product");
 
-      const productData = await productResponse.json();
-      const productId = productData.id;
-      console.log("product data",productData)
-      console.log("product ID",productId)
-
-      // 2. Upload Images
-      const imageFormData = new FormData();
-      images.forEach((image) => {
-        imageFormData.append("images", image);
-      });
-      imageFormData.append("id", productId);
-
-      const imageResponse = await fetch(
-        "http://localhost:3000/images/upload",
-        {
-          method: "POST",
-          body: imageFormData,
-        }
-      );
-
-      if (!imageResponse.ok) {
-        throw new Error("Failed to upload images");
-      }
-      console.log(productId)
-      // 3. Add Prices
-      for (const variant of variants) {
-        const priceResponse = await fetch(
-          "http://localhost:3000/add/prices",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              productId,
-              Weight: variant.weight,
-              Price: parseInt(variant.price),
-            }),
-          }
-        );
-        console.log(priceResponse)
-
-        if (!priceResponse.ok) {
-          throw new Error("Failed to add price");
-        }
-      }
-
-      // Success Message
-      setSuccessMessage("Product added successfully!");
-      setName("");
-      setCategory("chocolate");
-      setCookiesType("chocolate cookies");
-      setVariants([{ weight: "", price: "" }]);
-      setImages([]);
-      e.target.reset(); 
+      const data = await response.json();
+      console.log("Response Data:", data);
+      alert("Product added successfully!");
+      resetForm();
+      e.target.reset();
     } catch (error) {
       console.error("Error:", error);
       alert(error.message);
@@ -122,15 +80,7 @@ const AddProduct = () => {
       <div className="flex-grow flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
-          className="p-6 rounded-lg max-w-lg w-full"
-          style={{
-            background: "rgba(255, 255, 255, 0.25)",
-            boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-            backdropFilter: "blur(7px)",
-            WebkitBackdropFilter: "blur(7px)",
-            borderRadius: "10px",
-            border: "1px solid rgba(255, 255, 255, 0.18)",
-          }}
+          className="p-6 rounded-lg max-w-lg w-full bg-white bg-opacity-25 shadow-lg backdrop-blur-lg border border-white border-opacity-20"
         >
           <h2 className="text-2xl font-bold mb-6 text-center">Add Product</h2>
           <div>
@@ -173,30 +123,26 @@ const AddProduct = () => {
           )}
           {variants.map((variant, index) => (
             <div key={index} className="mt-4 grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2">Weight:</label>
-                <input
-                  type="text"
-                  value={variant.weight}
-                  onChange={(e) =>
-                    handleVariantChange(index, "weight", e.target.value)
-                  }
-                  className="border p-2 w-full rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Price:</label>
-                <input
-                  type="text"
-                  value={variant.price}
-                  onChange={(e) =>
-                    handleVariantChange(index, "price", e.target.value)
-                  }
-                  className="border p-2 w-full rounded"
-                  required
-                />
-              </div>
+              <input
+                type="text"
+                placeholder="Weight"
+                value={variant.weight}
+                onChange={(e) =>
+                  handleVariantChange(index, "weight", e.target.value)
+                }
+                className="border p-2 rounded"
+                required
+              />
+              <input
+                type="number"
+                placeholder="Price"
+                value={variant.price}
+                onChange={(e) =>
+                  handleVariantChange(index, "price", e.target.value)
+                }
+                className="border p-2 rounded"
+                required
+              />
             </div>
           ))}
           {variants.length < 3 && (
@@ -212,36 +158,20 @@ const AddProduct = () => {
             <label className="block mb-2">Images (Max 5):</label>
             <input
               type="file"
-              onChange={handleImageChange}
+              onChange={(e) => setImages(Array.from(e.target.files))}
               className="border p-2 w-full rounded"
               multiple
-              required
             />
           </div>
           <button
             type="submit"
-            className="bg-orange-500 text-white p-2 mt-4 w-full rounded flex justify-center items-center"
+            className="bg-orange-500 text-white p-2 mt-4 w-full rounded"
             disabled={loading}
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
-
-      {/* Success Modal */}
-      {successMessage && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-lg font-semibold">{successMessage}</h2>
-            <button
-              onClick={() => setSuccessMessage("")}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

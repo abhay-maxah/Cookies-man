@@ -1,5 +1,3 @@
-import React from 'react';
-
 const HowToSection = () => {
   return (
     <div className="w-auto mx-auto flex flex-col items-center justify-center min-h-screen p-8 bg-cream text-[#F64F14] border border-red-300">

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Footer from "./Footer";
 import axios from "axios";
 import { getUserId } from "../util/auth";
 
